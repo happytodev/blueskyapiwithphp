@@ -2,18 +2,18 @@
 
 namespace Happytodev\Blueskyapiwithphp;
 
-use Exception;
 use Dotenv\Dotenv;
+use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
-use PHPUnit\Util\Json;
+use GuzzleHttp\Psr7\Request;
 
 class Blueskyapiwithphp
 {
-
     protected $client;
+
     protected $headers;
+
     protected $blueskyBaseUrl;
 
     public function __construct(string $blueskyApiKey)
@@ -27,7 +27,7 @@ class Blueskyapiwithphp
 
         $this->headers = [
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $blueskyApiKey,
+            'Authorization' => 'Bearer '.$blueskyApiKey,
         ];
 
         $this->client = new Client([
@@ -39,8 +39,8 @@ class Blueskyapiwithphp
     /**
      * builUri : build the at-uri based on user handle and postId
      *
-     * @param string $handle
-     * @param string $postId
+     * @param  string  $handle
+     * @param  string  $postId
      * @return string|Exception
      */
     protected function buildUri($handle, $postId)
@@ -57,7 +57,7 @@ class Blueskyapiwithphp
     /**
      * getDid : return the did of the user's handle provided
      *
-     * @param string $handle
+     * @param  string  $handle
      * @return string|Exception
      */
     public function getDid($handle)
@@ -65,7 +65,7 @@ class Blueskyapiwithphp
         $getProfileUri = '/app.bsky.actor.getProfile?actor=';
 
         try {
-            $request = new Request('GET', $this->blueskyBaseUrl . $getProfileUri . $handle, $this->headers);
+            $request = new Request('GET', $this->blueskyBaseUrl.$getProfileUri.$handle, $this->headers);
             $response = $this->client->sendAsync($request)->wait();
             $responseBody = $response->getBody()->getContents();
             $responseData = json_decode($responseBody);
@@ -103,17 +103,17 @@ class Blueskyapiwithphp
      *
      * Return like's infos on a post of an user
      *
-     * @param string $handle the handle of post's user
-     * @param string $postId the post id
+     * @param  string  $handle  the handle of post's user
+     * @param  string  $postId  the post id
      * @return object The like's information
      */
     public function getPostLikes($handle, $postId)
     {
-        $getLikesUri = $this->blueskyBaseUrl . '/app.bsky.feed.getLikes?uri=';
+        $getLikesUri = $this->blueskyBaseUrl.'/app.bsky.feed.getLikes?uri=';
 
         $atUri = $this->buildUri($handle, $postId);
 
-        $request = new Request('GET', $getLikesUri . $atUri, $this->headers);
+        $request = new Request('GET', $getLikesUri.$atUri, $this->headers);
 
         $response = $this->client->sendAsync($request)->wait();
 
@@ -124,14 +124,11 @@ class Blueskyapiwithphp
         return $responseDatas['likes'] ?? [];
     }
 
-
     /**
      * getPostLikesCount
      *
      * Gives the count of likes on a post
      *
-     * @param string $handle
-     * @param string $postId
      * @return string
      */
     public function getPostLikesCount(string $handle, string $postId): int
@@ -145,10 +142,6 @@ class Blueskyapiwithphp
      * getPostRepostsCount
      *
      * Gives the count of repost on a post
-     *
-     * @param string $handle
-     * @param string $postId
-     * @return integer
      */
     public function getPostRepostsCount(string $handle, string $postId): int
     {
@@ -162,8 +155,6 @@ class Blueskyapiwithphp
      *
      * Gives the count of replies on a post
      *
-     * @param string $handle
-     * @param string $postId
      * @return string
      */
     public function getPostRepliesCount(string $handle, string $postId): int
@@ -178,19 +169,17 @@ class Blueskyapiwithphp
      *
      * Gives all information on a post / thread
      *
-     * @param string $handle
-     * @param string $postId
      * @return string
      */
     public function getPostThread(string $handle, string $postId): array|int|string
     {
-        $apiMethod = $this->blueskyBaseUrl . "/app.bsky.feed.getPostThread";
+        $apiMethod = $this->blueskyBaseUrl.'/app.bsky.feed.getPostThread';
 
         $atUri = $this->buildUri($handle, $postId);
 
-        $apiParams = "?uri=" . $atUri;
+        $apiParams = '?uri='.$atUri;
 
-        $request = new Request('GET', $apiMethod . $apiParams, $this->headers);
+        $request = new Request('GET', $apiMethod.$apiParams, $this->headers);
 
         $response = $this->client->sendAsync($request)->wait();
 
