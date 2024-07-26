@@ -119,7 +119,9 @@ class Blueskyapiwithphp
 
         $responseBody = $response->getBody()->getContents();
 
-        return json_decode($responseBody, true);
+        $responseDatas = json_decode($responseBody, true);
+
+        return $responseDatas['likes'] ?? [];
     }
 
 
