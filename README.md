@@ -7,7 +7,7 @@
 A package to interact with Bluesky API with PHP.
 
 
-## Support us
+## Support me
 
 I invest a lot of time to create many things for the community. You can [sponsor me](https://github.com/sponsors/happytodev) if you want.
 
