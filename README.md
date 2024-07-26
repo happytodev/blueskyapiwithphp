@@ -4,15 +4,13 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/happytodev/blueskyapiwithphp/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/happytodev/blueskyapiwithphp/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/happytodev/blueskyapiwithphp.svg?style=flat-square)](https://packagist.org/packages/happytodev/blueskyapiwithphp)
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+A package to interact with Bluesky API with PHP.
+
 
 ## Support us
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/blueskyapiwithphp.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/blueskyapiwithphp)
+I invest a lot of time to create many things for the community. You can [sponsor me](https://github.com/sponsors/happytodev) if you want.
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
@@ -24,9 +22,40 @@ composer require happytodev/blueskyapiwithphp
 
 ## Usage
 
+A little example with Laravel but you can use in plain PHP or with your favorite framework too. It's up to you.
+
 ```php
-$skeleton = new Happytodev\Blueskyapiwithphp();
-echo $skeleton->echoPhrase('Hello, Happytodev!');
+<?php
+
+namespace App\Http\Controllers;
+
+use Happytodev\Blueskyapiwithphp\Blueskyapiwithphp;
+
+class BlueskyController extends Controller
+{
+    protected $blueskyApi;
+
+    public function __construct()
+    {
+        $this->blueskyApi = new Blueskyapiwithphp(config('services.bluesky.api_key'));
+    }
+
+    public function showLikes($handle, $postId)
+    {
+        $likes = $this->blueskyApi->getPostLikes($handle, $postId);
+
+        return view('likes', compact('likes'));
+    }
+
+    public function showPostLikesNumber($handle, $postId)
+    {
+        $likesCount = $this->blueskyApi->getPostLikesCount($handle, $postId);
+        $repostsCount = $this->blueskyApi->getPostRepostsCount($handle, $postId);
+        $repliesCount = $this->blueskyApi->getPostRepliesCount($handle, $postId);
+
+        dd($likesCount, $repostsCount, $repliesCount);
+    }
+}
 ```
 
 ## Testing
@@ -38,10 +67,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](https://github.com/spatie/.github/blob/main/CONTRIBUTING.md) for details.
 
 ## Security Vulnerabilities
 
