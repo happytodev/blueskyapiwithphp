@@ -27,7 +27,7 @@ class Blueskyapiwithphp
 
         $this->headers = [
             'Accept' => 'application/json',
-            'Authorization' => 'Bearer '.$blueskyApiKey,
+            'Authorization' => 'Bearer ' . $blueskyApiKey,
         ];
 
         $this->client = new Client([
@@ -65,7 +65,7 @@ class Blueskyapiwithphp
         $getProfileUri = '/app.bsky.actor.getProfile?actor=';
 
         try {
-            $request = new Request('GET', $this->blueskyBaseUrl.$getProfileUri.$handle, $this->headers);
+            $request = new Request('GET', $this->blueskyBaseUrl . $getProfileUri . $handle, $this->headers);
             $response = $this->client->sendAsync($request)->wait();
             $responseBody = $response->getBody()->getContents();
             $responseData = json_decode($responseBody);
@@ -87,10 +87,10 @@ class Blueskyapiwithphp
                 if ($statusCode === 400 && isset($responseData->message)) {
                     return ['error' => $responseData->message];
                 } else {
-                    return ['error' => 'Une erreur inattendue est survenue.'];
+                    return ['error' => 'An unexpected error has occurred.'];
                 }
             } else {
-                return ['error' => 'Erreur de connexion à l\'API.'];
+                return ['error' => 'API connection error.'];
             }
         } catch (\Exception $e) {
             // Handling others exceptions
@@ -109,11 +109,11 @@ class Blueskyapiwithphp
      */
     public function getPostLikes($handle, $postId)
     {
-        $getLikesUri = $this->blueskyBaseUrl.'/app.bsky.feed.getLikes?uri=';
+        $getLikesUri = $this->blueskyBaseUrl . '/app.bsky.feed.getLikes?uri=';
 
         $atUri = $this->buildUri($handle, $postId);
 
-        $request = new Request('GET', $getLikesUri.$atUri, $this->headers);
+        $request = new Request('GET', $getLikesUri . $atUri, $this->headers);
 
         $response = $this->client->sendAsync($request)->wait();
 
@@ -173,13 +173,13 @@ class Blueskyapiwithphp
      */
     public function getPostThread(string $handle, string $postId): array|int|string
     {
-        $apiMethod = $this->blueskyBaseUrl.'/app.bsky.feed.getPostThread';
+        $apiMethod = $this->blueskyBaseUrl . '/app.bsky.feed.getPostThread';
 
         $atUri = $this->buildUri($handle, $postId);
 
-        $apiParams = '?uri='.$atUri;
+        $apiParams = '?uri=' . $atUri;
 
-        $request = new Request('GET', $apiMethod.$apiParams, $this->headers);
+        $request = new Request('GET', $apiMethod . $apiParams, $this->headers);
 
         $response = $this->client->sendAsync($request)->wait();
 
