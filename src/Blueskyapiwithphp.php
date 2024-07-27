@@ -55,9 +55,60 @@ class Blueskyapiwithphp
     }
 
     /**
+     * fetchFollowers
+     *
+     * Get a part of followers for a specific user.
+     *
+     * @param  string  $handle  handle of the user
+     * @param  string  $cursor  position to start
+     * @param  int  $limit  how many followers to get in one call (between 0 and 100)
+     * @return string
+     */
+    public function fetchFollowers(
+        string $handle,
+        ?string $cursor = null,
+        ?int $limit = 50,
+    ): array {
+        $apiMethod = $this->blueskyBaseUrl.'/app.bsky.graph.getFollowers';
+
+        $apiParams = '?actor='.$handle.'&cursor='.$cursor.'&limit='.$limit;
+
+        $request = new Request('GET', $apiMethod.$apiParams, $this->headers);
+
+        $response = $this->client->sendAsync($request)->wait();
+
+        $responseBody = $response->getBody()->getContents();
+
+        return json_decode($responseBody, true);
+    }
+
+    /**
+     * getAllFollowers
+     *
+     * Get all followers of an user using cursor provided by fetchFollowers function
+     *
+     * @param  string  $handle  The handle of the user. Can be for example happytodev.bsky.social or did one : did:plc:qgtwnvt3sb4rjnzvnogfxka7
+     */
+    public function getAllFollowers(string $handle): array
+    {
+        $followers = [];
+        $cursor = null;
+
+        do {
+            $result = $this->fetchFollowers($handle, $cursor, limit: 100);
+            if (isset($result['followers'])) {
+                $followers = array_merge($followers, $result['followers']);
+            }
+            $cursor = $result['cursor'] ?? null;
+        } while ($cursor);
+
+        return $followers;
+    }
+
+    /**
      * getDid : return the did of the user's handle provided
      *
-     * @param  string  $handle
+     * @param  string  $handle  The handle of the user
      * @return string|Exception
      */
     public function getDid($handle)
