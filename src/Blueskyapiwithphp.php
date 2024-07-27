@@ -180,7 +180,9 @@ class Blueskyapiwithphp
      *
      * Gives the count of likes on a post
      *
-     * @return string
+     * @param  string  $handle  The handle of the user
+     * @param  string  $postId  the post id
+     * @return int The number of likes for this post
      */
     public function getPostLikesCount(string $handle, string $postId): int
     {
@@ -190,23 +192,13 @@ class Blueskyapiwithphp
     }
 
     /**
-     * getPostRepostsCount
-     *
-     * Gives the count of repost on a post
-     */
-    public function getPostRepostsCount(string $handle, string $postId): int
-    {
-        $responseDatas = $this->getPostThread($handle, $postId);
-
-        return $responseDatas['thread']['post']['repostCount'];
-    }
-
-    /**
      * getPostRepliesCount
      *
      * Gives the count of replies on a post
      *
-     * @return string
+     * @param  string  $handle  The handle of the user
+     * @param  string  $postId  the post id
+     * @return int The number of replies for this post
      */
     public function getPostRepliesCount(string $handle, string $postId): int
     {
@@ -220,6 +212,8 @@ class Blueskyapiwithphp
      *
      * Gives all information on a post / thread
      *
+     * @param  string  $handle  The handle of the user
+     * @param  string  $postId  the post id
      * @return string
      */
     public function getPostThread(string $handle, string $postId): array|int|string
