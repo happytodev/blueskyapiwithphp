@@ -232,4 +232,20 @@ class Blueskyapiwithphp
 
         return json_decode($responseBody, true);
     }
+
+    /**
+     * getPostRepostsCount
+     *
+     * Gives the count of repost on a post
+     *
+     * @param  string  $handle  The handle of the user
+     * @param  string  $postId  the post id
+     * @return int The number of reposts for this post
+     */
+    public function getPostRepostsCount(string $handle, string $postId): int
+    {
+        $responseDatas = $this->getPostThread($handle, $postId);
+
+        return $responseDatas['thread']['post']['repostCount'];
+    }
 }
